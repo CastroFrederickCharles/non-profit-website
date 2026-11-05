@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { CheckCircle } from 'lucide-react';
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
-import DonationModal from './components/DonationModal';
-import DonationCelebrationModal from './components/DonationCelebrationModal';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
+import DonatePage from './pages/DonatePage';
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState('home'); // 'home' | 'about'
+  const [currentPage, setCurrentPage] = useState('home'); // 'home' | 'about' | 'donate'
+  const [donationParams, setDonationParams] = useState({ amount: 50, frequency: 'one-time' });
   const [darkMode, setDarkMode] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDonateModalOpen, setIsDonateModalOpen] = useState(false);
-  const [celebrationData, setCelebrationData] = useState(null);
   const [notification, setNotification] = useState(null);
 
   // Sync Dark Mode with HTML class
@@ -27,6 +25,14 @@ export default function App() {
   const showToast = (msg) => {
     setNotification(msg);
     setTimeout(() => setNotification(null), 4000);
+  };
+
+  const handleOpenDonate = (params) => {
+    if (params) {
+      setDonationParams(params);
+    }
+    setCurrentPage('donate');
+    window.scrollTo(0, 0);
   };
 
   return (
@@ -49,45 +55,32 @@ export default function App() {
         setDarkMode={setDarkMode}
         isMobileMenuOpen={isMobileMenuOpen}
         setIsMobileMenuOpen={setIsMobileMenuOpen}
-        onOpenDonate={() => setIsDonateModalOpen(true)}
+        onOpenDonate={() => handleOpenDonate({ amount: 50, frequency: 'one-time' })}
       />
 
       {/* Main Page Rendering */}
       <main className="pt-20">
-        {currentPage === 'home' ? (
+        {currentPage === 'home' && (
           <HomePage 
             setCurrentPage={setCurrentPage} 
-            onOpenDonate={() => setIsDonateModalOpen(true)} 
+            onOpenDonate={handleOpenDonate} 
           />
-        ) : (
+        )}
+        {currentPage === 'about' && (
           <AboutPage showToast={showToast} />
+        )}
+        {currentPage === 'donate' && (
+          <DonatePage 
+            initialParams={donationParams}
+            setCurrentPage={setCurrentPage}
+            darkMode={darkMode}
+            showToast={showToast}
+          />
         )}
       </main>
 
       {/* Footer */}
       <Footer setCurrentPage={setCurrentPage} />
-
-      {/* Donation Modal Flow */}
-      {isDonateModalOpen && (
-        <DonationModal 
-          onClose={() => setIsDonateModalOpen(false)}
-          onSuccess={(data) => {
-            setIsDonateModalOpen(false);
-            setCelebrationData(data);
-          }}
-          darkMode={darkMode}
-        />
-      )}
-
-      {/* Celebratory Success Pop-up Modal */}
-      {celebrationData && (
-        <DonationCelebrationModal 
-          data={celebrationData}
-          onClose={() => setCelebrationData(null)}
-          darkMode={darkMode}
-          showToast={showToast}
-        />
-      )}
     </div>
   );
 }

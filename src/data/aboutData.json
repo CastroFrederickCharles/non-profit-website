@@ -1,0 +1,88 @@
+{
+  "founder": {
+    "name": "Frederick Charles L. Castro",
+    "nickname": "Chogs",
+    "role": "Founder & Executive Director",
+    "badgeTitle": "Meet The Founder",
+    "photoUrl": "https://images.unsplash.com/photo-1793900496840-b91d5b164ffe?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3Dq",
+    "headingPrefix": "Driven by Empathy,",
+    "headingHighlight": "Committed to Impact.",
+    "bioParagraphs": [
+      "Hello! I’m Frederick Charles L. Castro, but you can call me Chogs. Over the last decade, I’ve dedicated my life to building sustainable solutions for communities facing acute clean water shortages and educational barriers.",
+      "My philosophy is simple: non-profit work shouldn’t just be charity; it should be direct empowerment. We build local capacity so communities can thrive independently."
+    ],
+    "quote": "Real change happens when we stop treating beneficiaries as passive recipients and start treating them as leaders of their own future.",
+    "socials": [
+      {
+        "platform": "LinkedIn",
+        "url": "#"
+      },
+      {
+        "platform": "Twitter",
+        "url": "#"
+      },
+      {
+        "platform": "Email",
+        "url": "mailto:chogs@hopehorizon.org"
+      }
+    ]
+  },
+  "journey": {
+    "subtitle": "My Journey",
+    "title": "How HopeHorizon Came to Life",
+    "milestones": [
+      {
+        "year": "2018",
+        "title": "The Spark of Hope",
+        "description": "Started as a small community initiative after witnessing severe resource inequality during a volunteer trip abroad."
+      },
+      {
+        "year": "2020",
+        "title": "Official Non-Profit Registration",
+        "description": "Incorporated 501(c)(3) status and launched our flagship clean water accessibility program."
+      },
+      {
+        "year": "2022",
+        "title": "Expanding to Tech & Education",
+        "description": "Partnered with global tech companies to bring computer literacy to over 20 underfunded school districts."
+      },
+      {
+        "year": "2025",
+        "title": "$1M+ Raised & 15k+ Lives Impacted",
+        "description": "Achieved major milestone through sustainable community partnerships and transparent donor accountability."
+      }
+    ]
+  },
+  "values": {
+    "subtitle": "Leadership Pillars",
+    "title": "Values That Guide Our Mission",
+    "items": [
+      {
+        "name": "Radical Transparency",
+        "desc": "Open financial reporting and direct tracking for every dollar donated.",
+        "icon": "ShieldCheck"
+      },
+      {
+        "name": "Empathy-Driven Action",
+        "desc": "Listening first to community needs before building sustainable solutions.",
+        "icon": "Heart"
+      },
+      {
+        "name": "Long-Term Sustainability",
+        "desc": "Creating local capacity so projects remain self-sufficient after launch.",
+        "icon": "Target"
+      },
+      {
+        "name": "Global Collaboration",
+        "desc": "Uniting donors, local leaders, and experts across borders.",
+        "icon": "Globe"
+      }
+    ]
+  },
+  "contact": {
+    "title": "Connect With Frederick (\"Chogs\") Directly",
+    "subtitle": "Have a partnership idea, speaking inquiry, or question? Send a message!",
+    "buttonText": "Send Message",
+    "successToast": "Message sent! Thank you for reaching out to Chogs."
+  }
+}

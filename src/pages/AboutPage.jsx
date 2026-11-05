@@ -1,14 +1,34 @@
-import React, { useState } from 'react';
-import { Heart, Award, Mail, Send } from 'lucide-react';
+import { useState } from 'react';
+import { 
+  Heart, 
+  Award, 
+  Mail, 
+  Send, 
+  ShieldCheck, 
+  Target, 
+  Globe 
+} from 'lucide-react';
 import { Linkedin, Twitter } from '../components/icons/SocialIcons';
-import { MILESTONES, VALUES } from '../data/websiteData';
+import aboutData from '../data/aboutData.json';
+
+// Mapping for dynamic icons referenced in JSON
+const ICON_MAP = {
+  ShieldCheck,
+  Heart,
+  Target,
+  Globe,
+  Award,
+  Mail,
+  Send
+};
 
 export default function AboutPage({ showToast }) {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const { founder, journey, values, contact } = aboutData;
 
   const handleSubmitContact = (e) => {
     e.preventDefault();
-    showToast("Message sent! Thank you for reaching out to Chogs.");
+    showToast(contact.successToast || "Message sent! Thank you for reaching out.");
     setFormData({ name: '', email: '', message: '' });
   };
 
@@ -25,8 +45,8 @@ export default function AboutPage({ showToast }) {
               <div className="absolute -inset-4 bg-gradient-to-r from-emerald-500 to-amber-500 rounded-3xl blur-xl opacity-30"></div>
               <div className="relative rounded-3xl overflow-hidden border-4 border-white dark:border-slate-800 shadow-2xl">
                 <img 
-                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=800" 
-                  alt="Founder Portrait" 
+                  src={founder.photoUrl} 
+                  alt={`${founder.name} Portrait`} 
                   className="w-full h-[460px] object-cover object-top"
                 />
               </div>
@@ -35,8 +55,10 @@ export default function AboutPage({ showToast }) {
               <div className="absolute -bottom-4 right-4 bg-white dark:bg-slate-900 px-5 py-3 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 flex items-center gap-3">
                 <Award className="w-6 h-6 text-amber-500" />
                 <div>
-                  <p className="text-xs text-slate-500 font-medium">Founder & Executive Director</p>
-                  <p className="text-sm font-bold">Frederick Charles L. Castro <span className="text-emerald-600 dark:text-emerald-400 font-normal">("Chogs")</span></p>
+                  <p className="text-xs text-slate-500 font-medium">{founder.role}</p>
+                  <p className="text-sm font-bold">
+                    {founder.name} <span className="text-emerald-600 dark:text-emerald-400 font-normal">("{founder.nickname}")</span>
+                  </p>
                 </div>
               </div>
             </div>
@@ -46,40 +68,46 @@ export default function AboutPage({ showToast }) {
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 text-xs font-semibold">
               <Heart className="w-3.5 h-3.5 fill-current" />
-              <span>Meet The Founder</span>
+              <span>{founder.badgeTitle}</span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
-              Driven by Empathy, <br />
-              <span className="text-emerald-600 dark:text-emerald-400">Committed to Impact.</span>
+              {founder.headingPrefix} <br />
+              <span className="text-emerald-600 dark:text-emerald-400">{founder.headingHighlight}</span>
             </h1>
 
-            <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-              Hello! I’m Frederick Charles L. Castro, but you can call me Chogs. Over the last decade, I’ve dedicated my life to building sustainable solutions for communities facing acute clean water shortages and educational barriers.
-            </p>
-
-            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed">
-              My philosophy is simple: non-profit work shouldn’t just be charity; it should be direct empowerment. We build local capacity so communities can thrive independently.
-            </p>
+            {founder.bioParagraphs.map((para, index) => (
+              <p 
+                key={index} 
+                className={`${index === 0 ? 'text-base sm:text-lg' : 'text-sm sm:text-base'} text-slate-600 dark:text-slate-300 leading-relaxed`}
+              >
+                {para}
+              </p>
+            ))}
 
             {/* Core Values Quick Quote */}
-            <div className="p-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border-l-4 border-emerald-500 text-left">
-              <p className="text-xs font-semibold text-emerald-800 dark:text-emerald-300 italic">
-                "Real change happens when we stop treating beneficiaries as passive recipients and start treating them as leaders of their own future."
-              </p>
-            </div>
+            {founder.quote && (
+              <div className="p-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border-l-4 border-emerald-500 text-left">
+                <p className="text-xs font-semibold text-emerald-800 dark:text-emerald-300 italic">
+                  "{founder.quote}"
+                </p>
+              </div>
+            )}
 
             {/* Social Media Links */}
             <div className="pt-2 flex justify-center lg:justify-start gap-4">
-              <a href="#" className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-emerald-600 hover:text-white transition-all">
-                <Linkedin className="w-5 h-5" />
-              </a>
-              <a href="#" className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-emerald-600 hover:text-white transition-all">
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a href="#" className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-emerald-600 hover:text-white transition-all">
-                <Mail className="w-5 h-5" />
-              </a>
+              {founder.socials.map((social, index) => (
+                <a 
+                  key={index}
+                  href={social.url} 
+                  title={social.platform}
+                  className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-emerald-600 hover:text-white transition-all"
+                >
+                  {social.platform === 'LinkedIn' && <Linkedin className="w-5 h-5" />}
+                  {social.platform === 'Twitter' && <Twitter className="w-5 h-5" />}
+                  {social.platform === 'Email' && <Mail className="w-5 h-5" />}
+                </a>
+              ))}
             </div>
           </div>
 
@@ -89,12 +117,12 @@ export default function AboutPage({ showToast }) {
       {/* 2. TIMELINE & STORY */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="text-center space-y-3">
-          <h2 className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">My Journey</h2>
-          <h3 className="text-3xl font-extrabold">How HopeHorizon Came to Life</h3>
+          <h2 className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">{journey.subtitle}</h2>
+          <h3 className="text-3xl font-extrabold">{journey.title}</h3>
         </div>
 
         <div className="relative border-l-2 border-emerald-500/30 ml-4 sm:ml-32 space-y-10">
-          {MILESTONES.map((item, idx) => (
+          {journey.milestones.map((item, idx) => (
             <div key={idx} className="relative pl-8 group">
               {/* Year Label */}
               <div className="absolute -left-[37px] top-0 w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold ring-4 ring-white dark:ring-slate-950">
@@ -119,13 +147,13 @@ export default function AboutPage({ showToast }) {
       {/* 3. VALUES & SKILLS */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         <div className="text-center space-y-3">
-          <h2 className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Leadership Pillars</h2>
-          <h3 className="text-3xl font-extrabold">Values That Guide Our Mission</h3>
+          <h2 className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">{values.subtitle}</h2>
+          <h3 className="text-3xl font-extrabold">{values.title}</h3>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {VALUES.map((val, idx) => {
-            const IconComp = val.icon;
+          {values.items.map((val, idx) => {
+            const IconComp = ICON_MAP[val.icon] || Heart;
             return (
               <div key={idx} className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-emerald-500 transition-all space-y-3">
                 <div className="p-3 w-fit rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-600">
@@ -143,8 +171,8 @@ export default function AboutPage({ showToast }) {
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 sm:p-12 border border-slate-200 dark:border-slate-800 shadow-xl space-y-8">
           <div className="text-center space-y-2">
-            <h3 className="text-2xl font-bold">Connect With Frederick ("Chogs") Directly</h3>
-            <p className="text-xs text-slate-500">Have a partnership idea, speaking inquiry, or question? Send a message!</p>
+            <h3 className="text-2xl font-bold">{contact.title}</h3>
+            <p className="text-xs text-slate-500">{contact.subtitle}</p>
           </div>
 
           <form onSubmit={handleSubmitContact} className="space-y-4">
@@ -190,7 +218,7 @@ export default function AboutPage({ showToast }) {
               className="w-full py-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <Send className="w-4 h-4" />
-              Send Message
+              {contact.buttonText || "Send Message"}
             </button>
           </form>
         </div>
@@ -199,4 +227,3 @@ export default function AboutPage({ showToast }) {
     </div>
   );
 }
-

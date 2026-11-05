@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
   Heart, 
   ArrowRight, 
@@ -209,7 +209,7 @@ export default function HomePage({ setCurrentPage, onOpenDonate }) {
                     Beneficiaries: <strong className="text-slate-700 dark:text-slate-300">{item.beneficiaries}</strong>
                   </span>
                   <button 
-                    onClick={onOpenDonate}
+                    onClick={() => onOpenDonate({ amount: 50, frequency: 'one-time', fund: item.title })}
                     className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 cursor-pointer"
                   >
                     Support <ArrowRight className="w-3.5 h-3.5" />

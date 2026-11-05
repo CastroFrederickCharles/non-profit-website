@@ -1,4 +1,3 @@
-import React from 'react';
 import { Heart, Sun, Moon, Menu, X } from 'lucide-react';
 
 export default function Navigation({ 
@@ -66,7 +65,11 @@ export default function Navigation({
           {/* Action CTA Button */}
           <button
             onClick={onOpenDonate}
-            className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm shadow-md shadow-emerald-600/20 transition-all transform hover:-translate-y-0.5 flex items-center gap-2 cursor-pointer"
+            className={`px-5 py-2.5 rounded-xl font-semibold text-sm shadow-md transition-all transform hover:-translate-y-0.5 flex items-center gap-2 cursor-pointer ${
+              currentPage === 'donate'
+                ? 'bg-emerald-700 text-white ring-2 ring-emerald-400 shadow-emerald-700/30'
+                : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/20'
+            }`}
           >
             <Heart className="w-4 h-4 fill-current text-white/80" />
             Donate Now

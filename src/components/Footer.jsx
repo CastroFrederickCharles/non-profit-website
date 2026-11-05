@@ -1,4 +1,3 @@
-import React from 'react';
 import { Heart } from 'lucide-react';
 import { Twitter, Linkedin, Github } from './icons/SocialIcons';
 
@@ -38,6 +37,14 @@ export default function Footer({ setCurrentPage }) {
                 className="hover:text-emerald-400 transition-colors cursor-pointer"
               >
                 About the Founder
+              </button>
+            </li>
+            <li>
+              <button 
+                onClick={() => { setCurrentPage('donate'); window.scrollTo(0, 0); }} 
+                className="hover:text-emerald-400 transition-colors cursor-pointer"
+              >
+                Donate & Payment
               </button>
             </li>
           </ul>
