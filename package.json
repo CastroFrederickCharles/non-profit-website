@@ -12,10 +12,12 @@
   "dependencies": {
     "@stripe/react-stripe-js": "^7.0.1",
     "@stripe/stripe-js": "^10.2.1",
+    "dotenv": "^18.0.9",
     "lucide-react": "^1.54.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "react-router-dom": "^7.18.4"
+    "react-router-dom": "^7.18.4",
+    "stripe": "^23.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

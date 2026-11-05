@@ -26,7 +26,7 @@ function getCardBrand(num) {
 /**
  * Inner component mounted INSIDE <Elements> for live Stripe processing
  */
-export function LiveStripeElementsForm({ amount, frequency, darkMode, onPaymentSuccess, onCancel }) {
+export function LiveStripeElementsForm({ amount, frequency, fund, darkMode, onPaymentSuccess, onCancel }) {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -63,29 +63,53 @@ export function LiveStripeElementsForm({ amount, frequency, darkMode, onPaymentS
 
     try {
       const cardElement = elements.getElement(CardElement);
-      const { error, paymentMethod } = await stripe.createPaymentMethod({
-        type: 'card',
-        card: cardElement,
-        billing_details: {
-          name,
-          email,
-          address: { postal_code: zip }
+
+      // 1. Call local backend to create a real Stripe PaymentIntent
+      const response = await fetch('/api/create-payment-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount,
+          donorName: name,
+          donorEmail: email,
+          fund: fund || 'General Community Impact Fund'
+        })
+      });
+
+      const data = await response.json();
+      if (!response.ok || data.error) {
+        throw new Error(data.error || 'Server failed to initialize payment.');
+      }
+
+      // 2. Confirm the card payment directly with Stripe using the clientSecret
+      const result = await stripe.confirmCardPayment(data.clientSecret, {
+        payment_method: {
+          card: cardElement,
+          billing_details: {
+            name,
+            email,
+            address: { postal_code: zip }
+          }
         }
       });
 
-      if (error) {
-        setErrorMessage(error.message);
+      if (result.error) {
+        setErrorMessage(result.error.message);
         setLoading(false);
         return;
       }
 
-      onPaymentSuccess({
-        stripePaymentId: paymentMethod.id,
-        cardBrand: paymentMethod.card?.brand?.toUpperCase() || 'VISA',
-        cardLast4: paymentMethod.card?.last4 || '4242',
-        donorName: name,
-        donorEmail: email
-      });
+      if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
+        onPaymentSuccess({
+          stripePaymentId: result.paymentIntent.id,
+          cardBrand: 'CARD',
+          cardLast4: 'Verified',
+          donorName: name,
+          donorEmail: email
+        });
+      } else {
+        throw new Error('Payment was not completed. Status: ' + (result.paymentIntent?.status || 'Unknown'));
+      }
     } catch (err) {
       setErrorMessage(err.message || 'Payment processing failed. Please try again.');
       setLoading(false);

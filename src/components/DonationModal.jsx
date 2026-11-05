@@ -174,6 +174,7 @@ export default function DonationModal({ onClose, onSuccess, darkMode }) {
                 <LiveStripeElementsForm
                   amount={finalAmount}
                   frequency={frequency}
+                  fund="General Community Impact Fund"
                   darkMode={darkMode}
                   onPaymentSuccess={handlePaymentSuccess}
                   onCancel={() => setStep('select')}

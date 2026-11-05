@@ -389,6 +389,7 @@ export default function DonatePage({ initialParams, setCurrentPage, darkMode, sh
                 <LiveStripeElementsForm
                   amount={finalAmount}
                   frequency={frequency}
+                  fund={fund}
                   darkMode={darkMode}
                   onPaymentSuccess={handlePaymentSuccess}
                   onCancel={() => { setCurrentPage('home'); window.scrollTo(0, 0); }}
