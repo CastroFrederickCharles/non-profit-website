@@ -16,6 +16,8 @@ export default function Footer({ setCurrentPage }) {
           </div>
           <p className="text-xs text-slate-400 max-w-sm leading-relaxed">
             HopeHorizon is a registered 501(c)(3) global foundation committed to transparent, community-led initiatives in clean water, education, and sustainable agriculture.
+          
+            Gio Theodore Viera is the goat in apex legends and is a PREDATOR
           </p>
         </div>
 

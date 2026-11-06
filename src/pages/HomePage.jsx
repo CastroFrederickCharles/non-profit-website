@@ -10,13 +10,13 @@ import {
 } from 'lucide-react';
 import { INITIATIVES_DATA, IMPACT_STATS, TESTIMONIALS } from '../data/websiteData';
 
-export default function HomePage({ setCurrentPage, onOpenDonate }) {
+export default function HomePage({ initiatives = INITIATIVES_DATA, onResetInitiatives, setCurrentPage, onOpenDonate }) {
   const [activeCategory, setActiveCategory] = useState('All');
   const [activeTestimonial, setActiveTestimonial] = useState(0);
 
   const filteredInitiatives = activeCategory === 'All' 
-    ? INITIATIVES_DATA 
-    : INITIATIVES_DATA.filter(item => item.category === activeCategory);
+    ? initiatives 
+    : initiatives.filter(item => item.category === activeCategory);
 
   return (
     <div className="space-y-24 pb-20">
@@ -129,7 +129,21 @@ export default function HomePage({ setCurrentPage, onOpenDonate }) {
       {/* 3. OUR INITIATIVES & PROGRAMS */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="text-center space-y-4 max-w-2xl mx-auto">
-          <h2 className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Our Focus Areas</h2>
+          <div className="flex items-center justify-center gap-3">
+            <h2 className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Our Focus Areas</h2>
+            {onResetInitiatives && initiatives.some(i => {
+              const base = INITIATIVES_DATA.find(d => d.id === i.id)?.raised;
+              return base !== undefined && i.raised !== base;
+            }) && (
+              <button
+                onClick={onResetInitiatives}
+                className="text-[10px] text-slate-400 hover:text-rose-500 underline transition-colors cursor-pointer"
+                title="Reset initiative balances to initial defaults"
+              >
+                Reset demo balances
+              </button>
+            )}
+          </div>
           <h3 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Current High-Impact Programs</h3>
           <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base">
             Every project is carefully designed with community feedback to ensure long-term self-sufficiency and tangible change.
@@ -157,7 +171,8 @@ export default function HomePage({ setCurrentPage, onOpenDonate }) {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredInitiatives.map((item) => {
             const IconComp = item.icon;
-            const progressPercent = Math.round((item.raised / item.goal) * 100);
+            const baseline = INITIATIVES_DATA.find(d => d.id === item.id)?.raised || 0;
+            const progressPercent = Math.min(100, Math.round((item.raised / item.goal) * 100));
 
             return (
               <div 
@@ -193,8 +208,15 @@ export default function HomePage({ setCurrentPage, onOpenDonate }) {
 
                     {/* Funding Progress Bar */}
                     <div className="space-y-2 pt-2">
-                      <div className="flex justify-between text-xs font-semibold">
-                        <span className="text-emerald-600 dark:text-emerald-400">${item.raised.toLocaleString()} Raised</span>
+                      <div className="flex justify-between items-baseline text-xs font-semibold">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-emerald-600 dark:text-emerald-400 font-bold">${item.raised.toLocaleString()} Raised</span>
+                          {item.raised > baseline && (
+                            <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 font-medium animate-pulse">
+                              +${(item.raised - baseline).toLocaleString()} new
+                            </span>
+                          )}
+                        </div>
                         <span className="text-slate-500">Goal: ${item.goal.toLocaleString()}</span>
                       </div>
                       <div className="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">

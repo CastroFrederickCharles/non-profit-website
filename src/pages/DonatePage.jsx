@@ -13,7 +13,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import { LiveStripeElementsForm, StripeSimulatorForm } from '../components/StripeCheckoutForm';
 
-export default function DonatePage({ initialParams, setCurrentPage, darkMode, showToast }) {
+export default function DonatePage({ initialParams, onDonationSuccess, setCurrentPage, darkMode, showToast }) {
   const [amount, setAmount] = useState(initialParams?.amount || 50);
   const [customAmount, setCustomAmount] = useState('');
   const [frequency, setFrequency] = useState(initialParams?.frequency || 'one-time');
@@ -55,9 +55,27 @@ export default function DonatePage({ initialParams, setCurrentPage, darkMode, sh
       date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
       impactMessage: getImpactMessage(finalAmount)
     };
+
+    // Update global & persistent donation stats on high impact programs
+    onDonationSuccess?.({
+      amount: finalAmount,
+      fund,
+      frequency,
+      donorName: paymentDetails.donorName,
+      donorEmail: paymentDetails.donorEmail,
+      referenceId,
+      stripePaymentId: paymentDetails.stripePaymentId
+    });
+
     setSuccessReceipt(receiptData);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     showToast?.("Donation successful! Thank you for your generosity.");
+  };
+
+  const handleReturnHome = () => {
+    setSuccessReceipt(null);
+    setCurrentPage('home');
+    window.scrollTo(0, 0);
   };
 
   const handleShare = () => {
@@ -75,7 +93,7 @@ export default function DonatePage({ initialParams, setCurrentPage, darkMode, sh
       <div className="py-12 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 animate-fade-in">
         {/* Top return button */}
         <button
-          onClick={() => { setCurrentPage('home'); window.scrollTo(0, 0); }}
+          onClick={handleReturnHome}
           className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-emerald-600 transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -164,7 +182,7 @@ export default function DonatePage({ initialParams, setCurrentPage, darkMode, sh
             </button>
 
             <button
-              onClick={() => { setCurrentPage('home'); window.scrollTo(0, 0); }}
+              onClick={handleReturnHome}
               className="flex-1 py-3 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <Heart className="w-4 h-4 fill-current" />
